@@ -15,8 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'api', 'middleware' => 'cors'], function(){
-   Route::get('products','Api\ProductsController@index');
-   Route::get('session','Api\PagSeguroController@getSessionId');
-   Route::post('order','Api\OrdersController@store');
+Route::group(['prefix' => 'api', 'middleware' => 'cors'], function () {
+    Route::group(['middleware' => 'jwt.auth'], function () {
+        Route::get('products', 'Api\ProductsController@index');
+        Route::get('session', 'Api\PagSeguroController@getSessionId');
+        Route::post('order', 'Api\OrdersController@store');
+    });
+    Route::post('login', 'Api\AuthController@login');
 });

@@ -6,18 +6,18 @@ import {ProductListPage} from './pages/product-list/product-list';
 import {MyCartPage} from './pages/my-cart/my-cart';
 import {HTTP_PROVIDERS, Http} from "@angular/http";
 import {Cart} from "./providers/cart/cart";
-
-declare var PagSeguroDirectPayment;
+import {LoginPage} from "./pages/login/login";
+import {Auth} from "./providers/auth/auth";
 
 @Component({
   templateUrl: 'build/app.html',
-  providers: [Cart]
+  providers: [Cart, Auth]
 })
 class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   // make HelloIonicPage the root (or first) page
-  rootPage: any = MyCartPage;
+  rootPage: any = LoginPage;
   pages: Array<{title: string, component: any}>;
 
   constructor(
@@ -26,7 +26,6 @@ class MyApp {
     private http: Http
   ) {
     this.initializeApp();
-    this.getSession();
     // set our app's pages
     this.pages = [
       { title: 'Listagem de produtos', component: ProductListPage },
@@ -49,10 +48,7 @@ class MyApp {
     this.nav.setRoot(page.component);
   }
 
-  getSession(){
-    this.http.get('http://localhost:8000/api/session')
-        .toPromise().then(response => PagSeguroDirectPayment.setSessionId(response.json().sessionId))
-  }
+
 }
 
 ionicBootstrap(MyApp,[HTTP_PROVIDERS]);

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {Http} from "@angular/http";
+import {Http, Headers, RequestOptions} from "@angular/http";
 import {Cart} from "../../providers/cart/cart";
 import {MyCartPage} from "../my-cart/my-cart";
 
@@ -16,7 +16,13 @@ export class ProductListPage implements OnInit {
     }
 
     ngOnInit():any {
-        this.http.get('http://localhost:8000/api/products')
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+ localStorage.getItem('token')
+        });
+        let options = new RequestOptions({headers: headers});
+
+        this.http.get('http://localhost:8000/api/products',options)
             .toPromise().then(response => this.products = response.json())
     }
 
